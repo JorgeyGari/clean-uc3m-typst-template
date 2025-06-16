@@ -138,15 +138,21 @@
     bottom + left,
     dy: -0.01 * page-grid,  // Moved much closer to the bottom edge
     {
-      set text(fill: black, size: 0.6 * page-grid)  // Slightly smaller text
+      set text(fill: black, size: 0.5 * page-grid)  // Slightly smaller text
       set align(left)
-      image("creativecommons.png", width: 3.5cm)  // Slightly smaller logo
-      v(0.05 * page-grid)  // Reduced spacing between logo and text
-      if (language == "es") {
-        text("Esta obra está bajo una Licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional.")
-      } else {
-        text("This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.")
-      }
+      // Constrain the width based on page width
+      box(width: 60%, {
+        image("creativecommons.png", width: 3.5cm)  // Slightly smaller logo
+        v(0.05 * page-grid)  // Reduced spacing between logo and text
+        set par(justify: false)
+        if (language == "es") {
+          text("Esta obra está bajo una Licencia Creative Commons")
+          linebreak()
+          text("Atribución-NoComercial-SinDerivadas 4.0 Internacional.")
+        } else {
+          text("This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.")
+        }
+      })
     }
   )
 }
