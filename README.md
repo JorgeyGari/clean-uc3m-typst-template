@@ -208,52 +208,92 @@ A typical Studienarbeit which has _two authors_ and takes place at _DHBW only,_ 
   university-short: "DHBW",
 ``` 
 
-## Glossary
+## UC3M Template Modifications
 
-In order to create a glossary, the [`glossarium`-package](https://typst.app/universe/package/glossarium/) is used. That package defines the glossary being an array of arrays like:
+This template has been adapted to support Universidad Carlos III de Madrid (UC3M) thesis format alongside the original DHBW format.
 
-```typst  
-(
-  (
-    key: "Vulnerability",
-    description: "A Vulnerability is a flaw in a computer system that weakens the overall security of the system.",
-    group: "Glossar",
-  ),
-  (
-    key: "Patch",
-    description: "A patch is data that is intended to be used to modify an existing software resource such as a program or a file, often to fix bugs and security vulnerabilities.",
-  ),
-)
+### UC3M Specific Features
 
-``` 
+The template now includes:
 
-You may pass such a structure directly to the `glossary` parameter. But a glossary typically contains a lot more entries. So it should be better placed in a separate file. If you do so and the name of that file is e.g. "myglossary.typ", its content should have the following structure:
+- **UC3M Logo**: Automatically uses the UC3M logo (`uc3m_logo.svg`)
+- **UC3M Blue Color**: Uses the official UC3M blue color (`#000e78` - matches LaTeX class)
+- **Simplified Author Format**: For UC3M, only author name is required (no student-id, course, etc.)
+- **Spanish Language Support**: Added `"es"` language option
+- **UC3M Title Page Layout**: Matches the UC3M thesis cover page structure
+- **Flexible Date Formats**: Support for English, Spanish, and German date formats
 
-```typst 
-#let glossary-entries = (
-  (
-    key: "Vulnerability",
-    description: "A Vulnerability is a flaw in a computer system that weakens the overall security of the system.",
-    group: "Glossar",
-  ),
-  (
-    key: "Patch",
-    description: "A patch is data that is intended to be used to modify an existing software resource such as a program or a file, often to fix bugs and security vulnerabilities.",
-  ),
-)
-``` 
+### UC3M Cover Page Fields
 
-Then you can import this file into your "main.typ" as follows:
+**Fields displayed on UC3M cover:**
+- ✅ UC3M Logo (centered, larger size)
+- ✅ Degree name
+- ✅ Academic year/course
+- ✅ Thesis type (italic)
+- ✅ Title (in quotes with horizontal rule)
+- ✅ Author name
+- ✅ Tutor(s)
+- ✅ Location
+- ✅ Date
+- ✅ Creative Commons license (bottom left, with logo and text)
+
+**DHBW fields NOT displayed in UC3M format:**
+- ❌ University name (implied by logo)
+- ❌ University location (included in location field)
+- ❌ Student ID
+- ❌ Course details
+- ❌ Company information
+- ❌ Confidentiality statements
+- ❌ Multiple logos
+
+### UC3M Usage Example
 
 ```typst
-#import "pathToMyFile/myglossary.typ": glossary-entries
+#import "@preview/clean-dhbw:0.3.1": *
 
-// and when calling the template, you can pass `glossary-entries´ 
-// as an argument to `glossary`:
-
-glossary: glossary-entries
+#show: clean-dhbw.with(
+  // === ESSENTIAL UC3M FIELDS ===
+  title: "Development of a Symbolic Calculator from Scratch",
+  authors: ((name: "Jorge Lázaro Ruiz"),),
+  language: "en", // or "es" for Spanish
+  date: datetime(year: 2024, month: 6, day: 16),
+  date-format: "[month repr:long] [day], [year]", // English: "June 16, 2024"
+  // date-format: "[day] de [month repr:long] de [year]", // Spanish: "16 de junio de 2024"
+  
+  // UC3M specific display fields
+  degree: "Bachelor's Degree in Applied Mathematics and Computing",
+  course: "2023-2024",
+  tutors: ("Carlos Linares López",),
+  location: "Leganés, Madrid, Spain",
+  
+  // === TEMPLATE COMPATIBILITY (required but not displayed) ===
+  university: "Universidad Carlos III de Madrid",
+  university-location: "Leganés",
+  university-short: "UC3M", 
+  supervisor: (university: "Carlos Linares López"),
+  
+  // === OPTIONAL ===
+  type-of-thesis: "Bachelor's Thesis",
+  bibliography: bibliography("sources.bib"),
+)
 ```
 
-Please consult the `glossarium` docs to see the many variations it offers for forming a glossary entry. 
+### Date Format Options
 
-If you want to separate terms with longer glossary descriptions from simple acronyms within the glossary, you can use the `group` selector of `glossarium` in order to divide your entries into these categories.
+- **English**: `"[month repr:long] [day], [year]"` → "June 16, 2024"
+- **Spanish**: `"[day] de [month repr:long] de [year]"` → "16 de junio de 2024" (automatically uses Spanish month names)
+- **German/Default**: `"[day].[month].[year]"` → "16.06.2024"
+
+### UC3M vs DHBW Format Comparison
+
+| Field | UC3M Usage | DHBW Usage | Notes |
+|-------|------------|------------|-------|
+| `authors` | `(name: "Author")` | `(name: "Author", student-id: "123", course: "ABC", ...)` | UC3M simplified |
+| `degree` | ✅ Displayed on cover | ❌ Not used | UC3M specific |
+| `course` | ✅ Displayed as academic year | ❌ Not used | UC3M specific |
+| `tutors` | ✅ Displayed on cover | ❌ Not used | UC3M specific |
+| `location` | ✅ Displayed on cover | ❌ Not used | UC3M specific |
+| `university` | ❌ Not displayed (required for validation) | ✅ Displayed | Implied by UC3M logo |
+| `supervisor` | ❌ Not displayed (required for validation) | ✅ Displayed | Use `tutors` instead |
+| `confidentiality-marker` | ❌ Not used | ✅ Optional | Not relevant for UC3M |
+| `company` info | ❌ Not used | ✅ Required for non-university | UC3M is university-only |

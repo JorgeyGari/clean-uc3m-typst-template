@@ -50,8 +50,29 @@
     date.at(1)
   }
 
+  // Helper function for Spanish month names (same as in titlepage)
+  let get-spanish-month(month-num) = {
+    let spanish-months = (
+      "enero", "febrero", "marzo", "abril", "mayo", "junio",
+      "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    )
+    spanish-months.at(month-num - 1)
+  }
+
+  // Format date with Spanish month names if needed
+  let format-date(date-to-format) = {
+    set text(lang: language) // Set language context for date formatting
+    
+    if (language == "es" and date-format.contains("[month repr:long]")) {
+      // Manual Spanish date formatting
+      str(date-to-format.day()) + " de " + get-spanish-month(date-to-format.month()) + " de " + str(date-to-format.year())
+    } else {
+      date-to-format.display(date-format)
+    }
+  }
+
   v(2em)
-  text(authors-by-city.dedup().join(", ", last: AND.at(language)) + [ ] + end-date.display(date-format))
+  text(authors-by-city.dedup().join(", ", last: AND.at(language)) + [ ] + format-date(end-date))
 
   v(0.5em)
   if (many-authors) {

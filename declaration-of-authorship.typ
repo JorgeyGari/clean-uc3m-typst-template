@@ -18,17 +18,17 @@
     declaration-of-authorship-content
   } else {
     if (authors.len() == 1) {
-      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_A_SINGLE)
+      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_A_SINGLE.at(language))
       v(1em)
       align(center, text(weight: "bold", title))
       v(1em)
-      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_B_SINGLE)
+      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_B_SINGLE.at(language))
     } else {
-      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_A_PLURAL)
+      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_A_PLURAL.at(language))
       v(1em)
       align(center, text(weight: "bold", title))
       v(1em)
-      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_B_PLURAL)
+      par(justify: true, DECLARATION_OF_AUTHORSHIP_SECTION_B_PLURAL.at(language))
     }
   }
 
@@ -38,13 +38,34 @@
     date.at(1)
   }
 
+  // Helper function for Spanish month names (same as in titlepage)
+  let get-spanish-month(month-num) = {
+    let spanish-months = (
+      "enero", "febrero", "marzo", "abril", "mayo", "junio",
+      "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    )
+    spanish-months.at(month-num - 1)
+  }
+
+  // Format date with Spanish month names if needed
+  let format-date(date-to-format) = {
+    set text(lang: language) // Set language context for date formatting
+    
+    if (language == "es" and date-format.contains("[month repr:long]")) {
+      // Manual Spanish date formatting
+      str(date-to-format.day()) + " de " + get-spanish-month(date-to-format.month()) + " de " + str(date-to-format.year())
+    } else {
+      date-to-format.display(date-format)
+    }
+  }
+
   v(2em)
   if (at-university) {
-    text(city + [, ] + end-date.display(date-format))
+    text(city + [, ] + format-date(end-date))
   } else {
     let authors-by-city = authors.map(author => author.company.city).dedup()
 
-    text(authors-by-city.join(", ", last: AND.at(language)) + [ ] + end-date.display(date-format))
+    text(authors-by-city.join(", ", last: AND.at(language)) + [ ] + format-date(end-date))
   }
 
   v(1em)

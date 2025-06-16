@@ -11,35 +11,46 @@
 #let std-bibliography = bibliography
 
 #let clean-dhbw(
+  // Core fields (used by both DHBW and UC3M)
   title: none,
   authors: (:),
   language: none,
-  at-university: none,
-  confidentiality-marker: (display: false),
   type-of-thesis: none,
-  show-confidentiality-statement: true,
-  show-declaration-of-authorship: true,
-  show-table-of-contents: true,
-  show-abstract: true,
-  abstract: none,
-  appendix: none,
-  confidentiality-statement-content: none,
-  declaration-of-authorship-content: none,
-  titlepage-content: none,
-  university: none,
-  university-location: none,
-  university-short: none,
-  city: none,
-  supervisor: (:),
   date: none,
   date-format: "[day].[month].[year]",
   bibliography: none,
   glossary: none,
   bib-style: "ieee",
   math-numbering: "(1)",
-  logo-left: image("dhbw.svg"),
-  logo-right: none,
+  logo-left: image("uc3m_logo.svg"),
+  
+  // Content control
+  show-table-of-contents: true,
+  show-abstract: true,
+  abstract: none,
+  appendix: none,
+  
+  // DHBW specific fields (not used in UC3M format)
+  at-university: true,                    // DHBW: set to true for UC3M (default: true)
+  confidentiality-marker: (display: false), // DHBW: not used in UC3M
+  show-confidentiality-statement: true,   // DHBW: not used in UC3M
+  show-declaration-of-authorship: true,   // DHBW: optional for UC3M
+  confidentiality-statement-content: none, // DHBW: not used in UC3M
+  declaration-of-authorship-content: none,
+  titlepage-content: none,
+  university: none,                       // DHBW: not displayed in UC3M (implied by logo)
+  university-location: none,              // DHBW: not displayed in UC3M (use location instead)
+  university-short: none,                 // DHBW: not used in UC3M
+  city: none,                            // DHBW: not used in UC3M (use location instead)
+  supervisor: (:),                       // DHBW: not used in UC3M (use tutors instead)
+  logo-right: none,                      // DHBW: not used in UC3M (single logo only)
   ignored-link-label-keys-for-highlighting: (),
+  
+  // UC3M specific fields (primary for UC3M format)
+  degree: none,          // UC3M: Full degree name
+  course: none,          // UC3M: Academic year
+  tutors: (),           // UC3M: Array of tutor names  
+  location: none,       // UC3M: City and location (replaces city/university-location)
   body,
 ) = {
   // check required attributes
@@ -81,6 +92,9 @@
   let h3-size = 11pt
   let h4-size = 11pt
   let page-grid = 16pt  // vertical spacing on all pages
+  
+  // UC3M blue color (official UC3M color)
+  let azul-uc3m = rgb("#000e78")
 
   
   // ---------- Basic Document Settings ---------------------------------------
@@ -132,6 +146,12 @@
       confidentiality-marker,
       university-short,
       page-grid,
+      // UC3M specific parameters
+      degree: degree,
+      course: course,
+      tutors: tutors,
+      location: location,
+      azul-uc3m: azul-uc3m,
     )
   }
   counter(page).update(1)  
@@ -159,12 +179,12 @@
         columns: (1fr, 1fr),
         align: (left, right),
         row-gutter: 0.5em,
-        smallcaps(text(font: heading-font, size: body-size, 
+        smallcaps(text(font: heading-font, size: body-size, fill: azul-uc3m,
           context {
             hydra(1, display: (_, it) => it.body, use-last: true, skip-starting: false)
           },
         )),
-        text(font: heading-font, size: body-size, 
+        text(font: heading-font, size: body-size, fill: azul-uc3m,
           number-type: "lining",
           context {if in-frontmatter.get() {
               counter(page).display("i")      // roman page numbers for the frontmatter
@@ -173,7 +193,7 @@
             }
           }
         ),
-        grid.cell(colspan: 2, line(length: 100%, stroke: 0.5pt)),
+        grid.cell(colspan: 2, line(length: 100%, stroke: (paint: azul-uc3m, thickness: 0.5pt))),
       ),
       header-ascent: page-grid,
   )
@@ -183,8 +203,8 @@
   
   // ---------- Heading Format (Part I) ---------------------------------------
 
-  show heading: set text(weight: "bold", fill: luma(80), font: heading-font)
-  show heading.where(level: 1): it => {v(2 * page-grid) + text(size: 2 * page-grid, it)}
+  show heading: set text(weight: "bold", fill: azul-uc3m, font: heading-font)
+  show heading.where(level: 1): it => {v(2 * page-grid) + text(size: 2 * page-grid, fill: azul-uc3m, weight: "bold", it)}
 
   // ---------- Abstract ---------------------------------------
 
@@ -199,7 +219,7 @@
   // top-level TOC entries in bold without filling
   show outline.entry.where(level: 1): it => {
     set block(above: page-grid)
-    set text(font: heading-font, weight: "semibold", size: body-size)
+    set text(font: heading-font, weight: "semibold", size: body-size, fill: azul-uc3m)
     link(
       it.element.location(),    // make entry linkable
       it.indented(it.prefix(), it.body() + box(width: 1fr,) +  it.page())
@@ -209,7 +229,7 @@
   // other TOC entries in regular with adapted filling
   show outline.entry.where(level: 2).or(outline.entry.where(level: 3)): it => {
     set block(above: page-grid - body-size)
-    set text(font: heading-font, size: body-size)
+    set text(font: heading-font, size: body-size, fill: azul-uc3m)
     link(
       it.element.location(),  // make entry linkable
       it.indented(
@@ -240,7 +260,7 @@
 
   show heading: it => {
     set par(leading: 4pt, justify: false)
-    text(it, top-edge: 0.75em, bottom-edge: -0.25em)
+    text(it, top-edge: 0.75em, bottom-edge: -0.25em, fill: azul-uc3m)
     v(page-grid, weak: true)
   }
 
@@ -255,24 +275,26 @@
           dx: 9pt,          // slight adjustment for optimal alignment with right margin
           text(counter(heading).display(), 
             top-edge: "bounds",
-            size: page-grid * 10, weight: 900, luma(235), 
+            size: page-grid * 10, weight: 900, azul-uc3m.lighten(70%), 
           )
         )
         text(               // heading text on separate line
           it.body, size: h1-size,
+          fill: azul-uc3m,
+          weight: "bold",
           top-edge: 0.75em, 
           bottom-edge: -0.25em,
         )
       } else {
         v(2 * page-grid) 
-        text(size: 2 * page-grid, counter(heading).display() + h(0.5em) + it.body)   // appendix
+        text(size: 2 * page-grid, fill: azul-uc3m, weight: "bold", counter(heading).display() + h(0.5em) + it.body)   // appendix
       }
     }
   }
 
-  show heading.where(level: 2): it => {v(16pt) + text(size: h2-size, it)}
-  show heading.where(level: 3): it => {v(16pt) + text(size: h3-size, it)}
-  show heading.where(level: 4): it => {v(16pt) + smallcaps(text(size: h4-size, weight: "semibold", it.body))}
+  show heading.where(level: 2): it => {v(16pt) + text(size: h2-size, fill: azul-uc3m, it)}
+  show heading.where(level: 3): it => {v(16pt) + text(size: h3-size, fill: azul-uc3m, it)}
+  show heading.where(level: 4): it => {v(16pt) + smallcaps(text(size: h4-size, weight: "semibold", fill: azul-uc3m, it.body))}
 
  // ---------- Body Text ---------------------------------------
 

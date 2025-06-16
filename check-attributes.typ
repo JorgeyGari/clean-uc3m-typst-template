@@ -143,16 +143,22 @@
       panic("Author name is missing. Specify a name for each author in the 'authors' attribute of the template.")
     }
 
-    if ("student-id" not in author or author.student-id == none or author.student-id == "") {
-      panic("Student ID of '" + author.name + "' is missing. Specify a student ID for each author in the 'authors' attribute of the template.")
-    }
+    // Check if this is UC3M format (simplified authors) or DHBW format (detailed authors)
+    let is-uc3m-format = "student-id" not in author
+    
+    if not is-uc3m-format {
+      // DHBW format validation
+      if ("student-id" not in author or author.student-id == none or author.student-id == "") {
+        panic("Student ID of '" + author.name + "' is missing. Specify a student ID for each author in the 'authors' attribute of the template.")
+      }
 
-    if ("course" not in author or author.course == none or author.course == "") {
-      panic("Course of '" + author.name + "' is missing. Specify a course for each author in the 'authors' attribute of the template.")
-    }
+      if ("course" not in author or author.course == none or author.course == "") {
+        panic("Course of '" + author.name + "' is missing. Specify a course for each author in the 'authors' attribute of the template.")
+      }
 
-    if ("course-of-studies" not in author or author.course-of-studies == none or author.course-of-studies == "") {
-      panic("Course of studies of '" + author.name + "' is missing. Specify a course of studies for each author in the 'authors' attribute of the template.")
+      if ("course-of-studies" not in author or author.course-of-studies == none or author.course-of-studies == "") {
+        panic("Course of studies of '" + author.name + "' is missing. Specify a course of studies for each author in the 'authors' attribute of the template.")
+      }
     }
 
     if (at-university) {
@@ -160,7 +166,7 @@
         panic("Company of '" + author.name + "' is not allowed. Remove the 'company' object from the author.")
       }
 
-      if (type(city) != str or city == "") {
+      if (type(city) != str and type(city) != type(none) and city != "") {
         panic("City is invalid. Specify a string containing a city in the 'city' attribute.")
       }
     } else {
@@ -168,7 +174,7 @@
         panic("Remove the City attribute. When 'at-university' is true the city inside the company object is used.")
       }
 
-      if ("company" not in author) {
+      if ("company" not in author and not is-uc3m-format) {
         panic("Author '" + author.name + "' is missing a company. Add the 'company' object to the author.")
       }
     }
@@ -177,8 +183,8 @@
 
   // Check allowed languages
 
-  if (language != "en" and language != "de") {
-    panic("Language is invalid. Specify 'en' for English or 'de' for German in the 'language' attribute of the template.")
+  if (language != "en" and language != "de" and language != "es") {
+    panic("Language is invalid. Specify 'en' for English, 'de' for German, or 'es' for Spanish in the 'language' attribute of the template.")
   }
 
 
