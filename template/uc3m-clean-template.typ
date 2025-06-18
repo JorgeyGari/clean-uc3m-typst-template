@@ -2,7 +2,7 @@
 
 // Simple, clean UC3M template - just import and use!
 
-#show: clean-dhbw.with(
+#show: clean-uc3m.with(
   title: "Your Thesis Title Here",
   authors: (
     (name: "Your Name", student-id: "Your ID", course: "Your Course"),

@@ -1,6 +1,6 @@
 #import "../lib.typ": *
 
-#show: clean-dhbw.with(
+#show: clean-uc3m.with(
   title: "Test Document",
   authors: (
     (

@@ -10,7 +10,7 @@
 // Workaround for the lack of an `std` scope.
 #let std-bibliography = bibliography
 
-#let clean-dhbw(
+#let clean-uc3m(
   // Core fields (used by both DHBW and UC3M)
   title: none,
   authors: (:),

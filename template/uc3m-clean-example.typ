@@ -2,7 +2,7 @@
 #import "glossary.typ": glossary-entries
 
 // UC3M Clean Example - Only essential fields for UC3M format
-#show: clean-dhbw.with(
+#show: clean-uc3m.with(
   // === REQUIRED UC3M FIELDS ===
   title: "Development of a Symbolic Calculator from Scratch",
   authors: (

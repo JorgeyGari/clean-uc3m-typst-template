@@ -1,7 +1,7 @@
 #import "../lib.typ": *
 #import "glossary.typ": glossary-entries
 
-#show: clean-dhbw.with(
+#show: clean-uc3m.with(
   title: "Development of a Symbolic Calculator from Scratch",
   authors: (
     (name: "Jorge Lázaro Ruiz"),
