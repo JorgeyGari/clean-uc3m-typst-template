@@ -170,6 +170,7 @@
     spacing: page-grid,
     leading: page-grid - body-size, 
     justify: true,
+    first-line-indent: 1.5em,  // First-line indent for paragraphs
   )
 
   set page(
