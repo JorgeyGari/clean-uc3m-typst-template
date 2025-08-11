@@ -139,6 +139,12 @@ El contenido de este trabajo no puede ser puesto a disposición, ni en su totali
   "es": "Resumen",
 )
 
+#let ACKNOWLEDGEMENTS = (
+  "de": "Danksagung",
+  "en": "Acknowledgements",
+  "es": "Agradecimientos",
+)
+
 #let ACRONYMS = (
   "de": "Abkürzungen",
   "en": "Acronyms", 
@@ -154,7 +160,7 @@ El contenido de este trabajo no puede ser puesto a disposición, ni en su totali
 #let REFERENCES = (
   "de": "Literatur",
   "en": "References",
-  "es": "Referencias",
+  "es": "Bibliografía",
 )
 
 #let APPENDIX = (

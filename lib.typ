@@ -26,8 +26,12 @@
   
   // Content control
   show-table-of-contents: true,
+  show-acknowledgements: false, // Optional: acknowledgements section
+  acknowledgements: none, // Optional: acknowledgements content
   show-abstract: true,
   abstract: none,
+  abstract-secondary: none,          // Optional: second abstract in a different language
+  abstract-secondary-language: none, // Optional: language for secondary abstract (defaults to main language)
   appendix: none,
   
   // DHBW specific fields (not used in UC3M format)
@@ -105,7 +109,7 @@
   let in-body = state("in-body", true)                  // to control heading formatting in/outside of body
 
   // customize look of figure
-  set figure.caption(separator: [ --- ], position: bottom)
+  show figure.caption: set text(size: 0.85em)
 
   // math numbering
   set math.equation(numbering: math-numbering)
@@ -212,6 +216,23 @@
   if (show-abstract and abstract != none) {
     heading(level: 1, numbering: none, outlined: false, ABSTRACT.at(language))
     text(abstract)
+    pagebreak()
+  }
+
+  // ---------- Secondary Abstract ---------------------------------------
+  
+  if (show-abstract and abstract-secondary != none) {
+    let secondary-lang = if abstract-secondary-language != none { abstract-secondary-language } else { language }
+    heading(level: 1, numbering: none, outlined: false, ABSTRACT.at(secondary-lang))
+    text(abstract-secondary)
+    pagebreak()
+  }
+
+  // ---------- Acknowledgements ---------------------------------------
+  if (show-acknowledgements and acknowledgements != none) {
+    in-frontmatter.update(true)  // start of frontmatter
+    heading(level: 1, ACKNOWLEDGEMENTS.at(language), numbering: none, outlined: false)
+    text(acknowledgements)
     pagebreak()
   }
 
